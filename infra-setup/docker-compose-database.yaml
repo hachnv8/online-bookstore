@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Hach1997!
+      MYSQL_DATABASE: ebook_db
+      MYSQL_USER: ebook_user
+      MYSQL_PASSWORD: Hach1997!
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - infra-net
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - infra-net
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  infra-net:
+    external: true
+    name: infra-net
