@@ -13,13 +13,13 @@ fi
 
 # Chạy docker-compose
 echo "Starting database services (MySQL, Redis)..."
-docker-compose -f docker-compose-database.yaml up -d
+docker-compose -f ../docker-compose-database.yaml up -d
 
 echo "Starting Jenkins..."
-docker-compose -f docker-compose-jenkins.yaml up -d
+docker-compose -f ../docker-compose-jenkins.yaml up -d
 
 echo "Starting Kafka and Zookeeper..."
-docker-compose -f docker-compose-kafka.yaml up -d
+docker-compose -f ../docker-compose-kafka.yaml up -d
 
 echo "All infrastructure services are starting up. Please allow some time for them to be fully operational."
 echo "You can check their status using 'docker ps'."
