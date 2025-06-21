@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    container_name: redis-insight
+    ports:
+      - "8001:8001" # Cổng truy cập Redis Insight
+    environment:
+      # Optional: để Redis Insight tự động khám phá Redis trong cùng mạng
+      # REDISINSIGHT_HOST: 0.0.0.0
+      # REDISINSIGHT_PORT: 8001
+      # REDISINSIGHT_LOG_LEVEL: info
+      # Nếu bạn muốn kết nối đến Redis trong mạng infra-net, không cần cấu hình cụ thể ở đây,
+      # bạn sẽ thêm kết nối thủ công trong giao diện Redis Insight
+    networks:
+      - infra-net
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8000:8080" # Cổng truy cập Kafka-UI (ánh xạ 8000 bên ngoài tới 8080 bên trong container)
+    environment:
+      KAFKA_BROKERS: kafka:9092 # Tên dịch vụ Kafka và cổng nội bộ trong mạng Docker
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 # Tên dịch vụ Zookeeper và cổng nội bộ trong mạng Docker
+      # KAFKA_CLUSTER_0_NAME: MyKafkaCluster # Tùy chọn: Đặt tên cho cụm Kafka của bạn
+      # KAFKA_CLUSTER_0_ZOOKEEPER: zookeeper:2181
+      # KAFKA_CLUSTER_0_SCHEMA_REGISTRY: http://schema-registry:8081 # Nếu có Schema Registry
+    depends_on:
+      - kafka # Đảm bảo Kafka đã chạy trước khi Kafka-UI khởi động
+      - zookeeper # Đảm bảo Zookeeper đã chạy
+    networks:
+      - infra-net
+
+networks:
+  infra-net:
+    external: true
+    name: infra-net
