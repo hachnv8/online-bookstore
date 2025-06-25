@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  backend:
+    build: . # Docker sẽ tìm Dockerfile trong thư mục hiện tại (.)
+    container_name: bookstore_backend
+    ports:
+      - "1212:1212" # Ánh xạ cổng 1212 của host tới cổng 1212 của container
+    environment:
+      # Truyền các biến môi trường từ application.properties vào đây,
+      # HOẶC bạn có thể sử dụng file .env hoặc profile Spring
+      # Tuy nhiên, nếu bạn đã chỉnh sửa application.properties để dùng IP
+      # thì không cần truyền qua đây nữa nếu không có gì thay đổi.
+      # Nếu bạn muốn dùng lại tên dịch vụ nội bộ (mysql_db, redis_cache)
+      # khi chạy trong Docker Compose, hãy sửa lại application.properties
+      # và truyền lại các biến môi trường ở đây hoặc thông qua mạng.
+      SPRING_DATASOURCE_URL: jdbc:mysql://36.50.135.128:3306/ebook_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ebook_user
+      SPRING_DATASOURCE_PASSWORD: Hach1997! # Đảm bảo khớp với mật khẩu của bạn
+      SPRING_DATA_REDIS_HOST: 36.50.135.128
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_CACHE_REDIS_TIME_TO_LIVE: 60000
+    # Thêm networks nếu bạn muốn kết nối với các container infra khác
+    # Mạng này phải được tạo sẵn (external: true)
+    networks:
+      - infra-net
+
+networks:
+  infra-net:
+    external: true
+    name: infra-net
